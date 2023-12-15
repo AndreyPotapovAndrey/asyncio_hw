@@ -1,6 +1,6 @@
 import os
 
-from sqlalchemy import String, Integer
+from sqlalchemy import Integer, String
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -14,11 +14,15 @@ PG_DSN = f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HO
 
 
 engine = create_async_engine(PG_DSN)
-Session = async_sessionmaker(engine, expire_on_commit=False)  # Если expire_on_commit=True, то сессия будет  истекать
+Session = async_sessionmaker(
+    engine, expire_on_commit=False
+)  # Если expire_on_commit=True, то сессия будет  истекать
 # ("протухать") после коммита. И обязательно нужно будет создавать новую.
 
 
-class Base(DeclarativeBase, AsyncAttrs):  # Делает некоторые аттрибуты ORM-моделей (миксин) ассинхронными. К ним можно
+class Base(
+    DeclarativeBase, AsyncAttrs
+):  # Делает некоторые аттрибуты ORM-моделей (миксин) ассинхронными. К ним можно
     # будет обращаться с помощью await
     pass
 
@@ -47,4 +51,6 @@ class SwapiPeople(Base):
 async def init_db():
     async with engine.begin() as conn:  # Из engine вырываем одно подключение.
         await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)  # Создаём все таблицы, описанные выше.
+        await conn.run_sync(
+            Base.metadata.create_all
+        )  # Создаём все таблицы, описанные выше.
