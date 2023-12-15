@@ -32,7 +32,6 @@ class SwapiPeople(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
 
-    people_id: Mapped[int] = mapped_column(Integer)
     birth_year: Mapped[str] = mapped_column(String)
     eye_color: Mapped[str] = mapped_column(String(20))
     films: Mapped[str] = mapped_column(String)

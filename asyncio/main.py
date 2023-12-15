@@ -34,7 +34,8 @@ async def get_person(person_id, session):
         del data["edited"]
         del data["url"]
 
-        data["people_id"] = id
+        data["mass"] = int(data["mass"])
+        data["height"] = int(data["height"])
         data["films"] = await internal_data(data["films"], session)
         data["species"] = await internal_data(data["species"], session)
         data["starships"] = await internal_data(data["starships"], session)
@@ -48,7 +49,7 @@ async def get_person(person_id, session):
 
 async def insert_to_db(poeple_list: list):  # Принимает на вход список. + Типизируем.
     async with Session() as session:  # Открываем сессию.
-        people = [SwapiPeople(**data) for data in poeple_list]
+        people = [SwapiPeople(**data) for data in poeple_list if data is not None]
         # Создаём ORM-модели с помощью list comprehension
         # + Закидываем полученную информацию в эти модели.
         session.add_all(people)  # Добавляем сессию.
@@ -60,7 +61,7 @@ async def main():
     session = aiohttp.ClientSession()  # Содаём сессию
 
     for people_id_chunk in chunked(
-        range(1, 10), CHUNK_SIZE
+        range(1, 1000), CHUNK_SIZE
     ):  # Разбиваем на последовательности по 10
         # Без create_task мы можем перейти на следующий цикл итерации только после того,
         # как произойдёт вставка в базу
