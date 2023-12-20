@@ -1,3 +1,4 @@
+import logging
 import asyncio
 from pprint import pprint
 
@@ -13,10 +14,14 @@ async def internal_data(url_list, session):
     string = []
     for url in url_list:
         responce = await session.get(url)
-        data = await responce.json()
+        # data = await responce.json()
+        data = await responce.json(content_type=None)
         string.append(data["name"] if "name" in data else data["title"])
 
     return ", ".join(string)
+
+
+get_person_logger = logging.getLogger("get_person")
 
 
 # Получение информации о персонаже.
@@ -43,7 +48,11 @@ async def get_person(person_id, session):
 
         return data
 
-    except:
+
+    except Exception as er:
+
+        get_person_logger.error(f"Error with {person_id}: {er}", exc_info=True, stack_info=True)
+
         return
 
 
