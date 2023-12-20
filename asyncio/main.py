@@ -39,8 +39,8 @@ async def get_person(person_id, session):
         del data["edited"]
         del data["url"]
 
-        data["mass"] = int(data["mass"])
-        data["height"] = int(data["height"])
+        data["mass"] = data["mass"]
+        data["height"] = data["height"]
         data["films"] = await internal_data(data["films"], session)
         data["species"] = await internal_data(data["species"], session)
         data["starships"] = await internal_data(data["starships"], session)
