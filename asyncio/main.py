@@ -39,8 +39,6 @@ async def get_person(person_id, session):
         del data["edited"]
         del data["url"]
 
-        data["mass"] = data["mass"]
-        data["height"] = data["height"]
         data["films"] = await internal_data(data["films"], session)
         data["species"] = await internal_data(data["species"], session)
         data["starships"] = await internal_data(data["starships"], session)
@@ -70,7 +68,7 @@ async def main():
     session = aiohttp.ClientSession()  # Содаём сессию
 
     for people_id_chunk in chunked(
-        range(1, 1000), CHUNK_SIZE
+        range(1, 100), CHUNK_SIZE
     ):  # Разбиваем на последовательности по 10
         # Без create_task мы можем перейти на следующий цикл итерации только после того,
         # как произойдёт вставка в базу
